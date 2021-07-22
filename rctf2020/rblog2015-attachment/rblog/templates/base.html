@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-US">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a href="{% url 'posts:list' %}"><span class="navbar-brand">rBlog 2015</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <span class="navbar-text mr-4">{{ user.username }}</span>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:sign_out' %}">Sign out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:sign_in' %}">Sign in</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-3">
+    {% block body %}{% endblock %}
+</div>
+{% block footer %}{% endblock %}
+<script src="{% static "js/jquery.slim.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/axios.min.js" %}"></script>
+{% block script %}{% endblock %}
+</body>
+</html>

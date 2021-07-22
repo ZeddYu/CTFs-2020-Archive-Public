@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			function noop() {}
+			(() => {
+				window.open = () => "Whooops";
+				const oldCreateElement = Document.prototype.createElement;
+				Document.prototype.createElement = (a, ...args) => {
+					if (a !== "iframe" && a !== "frame")
+						return oldCreateElement.apply(document, [a, ...args]);
+					return "Whooops";
+				};
+				Document.prototype.createElementNS = noop;
+			})();
+			Function.prototype.toString = noop;
+			document.addEventListener(
+				"load",
+				(e) => {
+					try {
+						console.log("fucked");
+						e.target.contentWindow.Function.prototype.toString = noop;
+					} catch (e) {}
+				},
+				true
+			);
+			["Document", "Element", "Node"].forEach((documentKey) => {
+				Object.keys(window[documentKey].prototype).forEach((key) => {
+					try {
+						//console.log(key)
+						if (
+							window[documentKey].prototype[key] instanceof
+							Function
+						) {
+							window[documentKey].prototype[key] = noop;
+						}
+					} catch (e) {}
+				});
+			});
+			Array.from(document.all).forEach((item) => {
+				Object.defineProperty(item, "innerHTML", {
+					get: noop,
+					set: noop,
+				});
+			});
+		</script>
+	</body>
+</html>

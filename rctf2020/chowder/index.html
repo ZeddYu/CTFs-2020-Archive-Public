@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			function noop() {}
+			(() => {
+				const observer = new MutationObserver(function (mutations) {
+					mutations.forEach(function (mutation) {
+						const nodes = mutation.addedNodes;
+						for (var i = 0; i < nodes.length; i++) {
+							var node = nodes[i];
+							if (node.src != undefined && node.src != "") {
+								if (
+									/^https:\/\/www.google\.com\/*$/.test(
+										node.src
+									)
+								) {
+								} else {
+									node.parentNode.removeChild(node);
+								}
+							}
+							if (node.srcdoc != undefined && node.srcdoc != "") {
+								if (/[^a-zA-z0-9:/]/.test(node.srcdoc)) {
+									node.parentNode.removeChild(node);
+								}
+							}
+						}
+					});
+				});
+				observer.observe(document, {
+					subtree: true,
+					childList: true,
+				});
+				window.open = () => "";
+				const oldCreateElement = Document.prototype.createElement;
+				Document.prototype.createElement = (a, ...args) => {
+					if (a !== "iframe" && a !== "frame")
+						return oldCreateElement.apply(document, [a, ...args]);
+					return "";
+				};
+				Document.prototype.createElementNS = noop;
+			})();
+			window.uneval = function () {};
+			Function.prototype.toString = noop;
+			Function.prototype.toSource = noop;
+			document.addEventListener(
+				"load",
+				(e) => {
+					try {
+						console.log("fucked");
+						e.target.contentWindow.Function.prototype.toString = noop;
+						e.target.contentWindow.Function.prototype.toSource = noop;
+					} catch (e) {}
+				},
+				true
+			);
+			["Document", "Element"].forEach((documentKey) => {
+				Object.keys(window[documentKey].prototype).forEach((key) => {
+					try {
+						if (
+							window[documentKey].prototype[key] instanceof
+							Function
+						) {
+							window[documentKey].prototype[key] = noop;
+						}
+					} catch (e) {}
+				});
+			});
+		</script>
+	</body>
+</html>

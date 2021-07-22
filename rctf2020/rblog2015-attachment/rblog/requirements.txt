@@ -1,0 +1,4 @@
+django
+gunicorn
+gevent
+django-widget-tweaks

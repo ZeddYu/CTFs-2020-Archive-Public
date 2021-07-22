@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="index.php" id="main_form" style="position:sticky;">
+        <input type="text" name="target" placeholder="Find hidden elements (URL)" style="background-color:#d1d1d1; color:#717d85;"> <br />
+        <input type="submit" class="button" style="margin-top: 10px" value="Check"> <br />
+    </form>
+
+    <script>
+        var _0x3bc3=["\x6D\x61\x69\x6E\x5F\x66\x6F\x72\x6D",                    //0: "main_form"
+        "\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64",             //1: "getElementById"
+        "\x69\x6E\x70\x75\x74",                                                 //2: "input"
+        "\x63\x72\x65\x61\x74\x65\x45\x6C\x65\x6D\x65\x6E\x74",                 //3: "createElement"
+        "\x6E\x61\x6D\x65",                                                     //4: "name"
+        "\x65\x78\x70\x72\x65\x73\x73\x69\x6F\x6E",                             //5: "expression"
+        "\x73\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65",                     //6: "setAttribute"
+        "\x74\x79\x70\x65",                                                     //7: "type"
+        "\x74\x65\x78\x74",                                                     //8: "text"
+        "\x70\x6C\x61\x63\x65\x68\x6F\x6C\x64\x65\x72",                         //9: "placeholder"
+        "\x2F\x3C\x5B\x5E\x3C\x3E\x5D\x7B\x31\x2C\x7D\x68\x69\x64\x64\x65\x6E\x5B\x5E\x3C\x3E\x5D\x7B\x31\x2C\x7D\x3E\x2F"];
+        //10: "/<[^<>]{1,}hidden[^<>]{1,}>/"
+
+        var _frss=document[_0x3bc3[1]](_0x3bc3[0]);                             
+        //document.getElementById('main_form')
+        
+        var _xEger=document[_0x3bc3[3]](_0x3bc3[2]);                            
+        //document.createElement("input")
+        
+        _xEger[_0x3bc3[6]](_0x3bc3[4],_0x3bc3[5]);                              
+        //document.createElement("input").setAttribute("name","expression")
+
+        _xEger[_0x3bc3[6]](_0x3bc3[7],_0x3bc3[8]);                              
+        //document.createElement("input").setAttribute("type","text")
+
+        _xEger[_0x3bc3[6]](_0x3bc3[9],_0x3bc3[10])
+        //document.createElement("input").setAttribute("placeholder","/<[^<>]{1,}hidden[^<>]{1,}>/")
+    </script>
+</body>
+</html>

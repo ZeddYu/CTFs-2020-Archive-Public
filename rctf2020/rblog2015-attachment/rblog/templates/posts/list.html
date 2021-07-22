@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div>
+        <h2>Post list</h2>
+    </div>
+    <hr/>
+    <div id="post_list"></div>
+{% endblock %}
+{% load static %}
+{% block script %}
+    <script>
+        axios.get('?fetch').then(resp => {
+            for (let i of resp.data) {
+                let h5 = document.createElement('h5'), a = document.createElement('a')
+                a.href = i.id
+                a.text = i.title
+                h5.appendChild(a)
+                post_list.appendChild(h5)
+                post_list.appendChild(document.createElement('br'))
+            }
+        })
+    </script>
+{% endblock %}

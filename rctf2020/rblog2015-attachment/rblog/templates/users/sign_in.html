@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+Sign in
+{% endblock %}
+{% block body %}
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <form method="post">
+            {% include 'bs4form.html' with form=form %}
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            <button type="submit" class="btn btn-primary">Sign in</button>
+            <a class="btn btn-link" href="{% url 'users:sign_up' %}">Sign up</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

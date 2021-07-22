@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div>
+        <h2 class="list-inline-item" id="post_title"></h2><small class="text-secondary" id="post_time"></small>
+    </div>
+    <hr/>
+    <div id="post_content"></div>
+{% endblock %}
+{% block footer %}
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">💡 To send us a feedback on this post, please select the text and press Ctrl+Q</span>
+    </div>
+</footer>
+{% endblock %}
+{% load static %}
+{% block script %}
+    <style>
+        .hl {
+            background-color: yellow;
+        }
+    </style>
+    <script src="{% static "js/purify.min.js" %}"></script>
+    <script>
+        let postid = location.pathname.split('/', 3)[2];
+        axios.get('?fetch').then(resp => {
+            let p = resp.data
+            document.title = p.title
+            post_title.innerText = p.title
+            post_time.innerText = p.create_at
+            post_content.innerHTML = DOMPurify.sanitize(p.content)
+            highlight_word()
+        }, err => {
+            post_title.innerHTML = err
+        })
+
+        function highlight_word() {
+            u = new URL(location)
+            hl = u.searchParams.get('highlight') || ''
+            if (hl) {
+                // ban html tags
+                if (hl.includes('<') || hl.includes('>') || hl.length > 36) {
+                    u.searchParams.delete('highlight')
+                    history.replaceState('', '', u.href)
+                    alert('⚠️ illegal highlight word')
+                } else {
+                    // why the heck this only highlights the first occurrence? stupid javascript 😠
+                    // content.innerHTML = content.innerHTML.replace(hl, `<b class="hl">${hl}</b>`)
+                    hl_all = new RegExp(hl, 'g')
+                    replacement = `<b class="hl">${hl}</b>`
+                    post_content.innerHTML = post_content.innerHTML.replace(hl_all, replacement)
+                    let b = document.querySelector('b[class=hl]')
+                    if (b) {
+                        typeof b.scrollIntoViewIfNeeded === "function" ? b.scrollIntoViewIfNeeded() : b.scrollIntoView()
+                    }
+                }
+            }
+        }
+        $(document).keypress("q",function(e) {
+            if(e.ctrlKey){
+                let selectedText = window.getSelection().toString()
+                if(selectedText.length > 36){
+                    alert('Selected text is too long ;_;')
+                } else {
+                    if(confirm(`Send feedback on ${postid}?\n\nSelected text:\n${selectedText}`)){
+                        let params = new URLSearchParams()
+                        params.set('postid', postid)
+                        params.set('highlight', selectedText)
+                        axios.post('feedback', data=params.toString()).then(resp=>{
+                            alert('😊 Thanks for your feedback!')
+                        }, err=>{
+                            alert('☠️ ' + err.response.statusText)
+                        })
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

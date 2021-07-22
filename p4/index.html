@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>My cats</title>
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+		<script>
+			function getNewCats(kind) {
+				$.getJSON(
+					"http://catweb.zajebistyc.tf/cats?kind=" + kind,
+					function(data) {
+						if (data.status != "ok") {
+							return;
+						}
+						$("#cats_container").empty();
+						cats = data.content;
+						cats.forEach(function(cat) {
+							var newDiv = document.createElement("div");
+							newDiv.innerHTML =
+								'<img style="max-width: 200px; max-height: 200px" src="static/' +
+								kind +
+								"/" +
+								cat +
+								'" />';
+							$("#cats_container").append(newDiv);
+						});
+					}
+				);
+			}
+			$(document).ready(function() {
+				$("#cat_select").change(function() {
+					var kind = $(this).val();
+					history.pushState({}, "", "?" + kind);
+					getNewCats(kind);
+				});
+				var kind = window.location.search.substring(1);
+				if (kind == "") {
+					kind = "black";
+				}
+				getNewCats(kind);
+			});
+		</script>
+	</head>
+	<body>
+		<select id="cat_select">
+			<option value="black">black</option>
+			<option value="grey">grey</option>
+			<option value="red">red</option>
+			<option value="white">white</option>
+		</select>
+		<div id="cats_container"></div>
+		not like sumthing? send it <a href="/report">hier</a>
+	</body>
+</html>

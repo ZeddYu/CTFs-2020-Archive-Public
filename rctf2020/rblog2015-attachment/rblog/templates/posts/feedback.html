@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div>
+        <h2>Feedback list</h2>
+    </div>
+    <hr/>
+    <div id="feedback_list"></div>
+{% endblock %}
+{% load static %}
+{% block script %}
+    <script src="{% static "js/purify.min.js" %}"></script>
+    <script>
+        axios.get('?fetch').then(resp => {
+            for (let i of resp.data) {
+                let params = new URLSearchParams()
+                params.set('highlight', i.highlight_word)
+                if (i.link.includes('/') || i.link.includes('\\')) {
+                    continue; // bye bye hackers uwu
+                }
+                let a = document.createElement('a')
+                a.href = `${i.link}?${params.toString()}`
+                a.text = `${i.ip}: ${a.href}`
+                feedback_list.appendChild(a)
+                feedback_list.appendChild(document.createElement('br'))
+            }
+            feedback_list.innerHTML = DOMPurify.sanitize(feedback_list.innerHTML)
+        }, err => {
+            feedback_list.innerText = err
+        })
+    </script>
+{% endblock %}
